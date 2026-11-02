@@ -64,6 +64,7 @@ services:
         condition: service_healthy
     networks:
       - proyectoceid-network
+      - dokploy-network
 
 volumes:
   postgres-data:
@@ -73,3 +74,7 @@ networks:
   proyectoceid-network:
     name: proyectoceid-network
     driver: bridge
+
+  dokploy-network:
+    external: true
+    name: dokploy-network
