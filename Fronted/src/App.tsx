@@ -5,7 +5,7 @@ import './App.css'
 type AuthMode = 'login' | 'register'
 type Notice = { kind: 'error' | 'success'; message: string }
 
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '')
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 
 function getErrorMessage(data: unknown) {
   if (typeof data === 'object' && data !== null && 'detail' in data) {

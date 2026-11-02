@@ -20,3 +20,8 @@ docker run --rm -p 8080:80 proyectoceid-frontend
 ```
 
 Abre `http://localhost:8080`. Para cambiar la dirección de la API incluida en la compilación, agrega `--build-arg VITE_API_URL=http://localhost:8000` al comando `docker build`. La API debe permitir CORS desde el origen del frontend.
+
+En Docker Compose, el frontend usa por defecto una ruta relativa (`/api`) y
+Nginx la reenvia al servicio `backend` dentro de la red Docker. Esto permite
+que el navegador use el mismo dominio del frontend y evita apuntar a
+`localhost:8000` en produccion.
