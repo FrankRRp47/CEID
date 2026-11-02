@@ -46,8 +46,9 @@ Para generar una clave JWT de desarrollo, usa
 El Dockerfile se construye desde esta carpeta. `.env` se excluye del contexto;
 al iniciar un contenedor, proporciona `DATABASE_URL` y `JWT_SECRET_KEY` como
 variables de entorno. Usa como host de PostgreSQL el nombre del servicio o
-contenedor accesible desde la red Docker, no `localhost`. Aplica
-`alembic upgrade head` contra esa misma base de datos antes de iniciar la API.
+contenedor accesible desde la red Docker, no `localhost`. El entrypoint ejecuta
+automaticamente `alembic upgrade head` contra esa misma base de datos antes de
+iniciar la API; si la migracion falla, el contenedor no inicia la API.
 
 Si PostgreSQL ya esta ejecutandose en un contenedor llamado
 `postgres-container`, conecta ambos contenedores a una red Docker compartida.
@@ -58,7 +59,8 @@ docker network create proyectoceid-network
 docker network connect proyectoceid-network postgres-container
 ```
 
-Desde esta carpeta, aplica la migracion y arranca la API en esa red:
+Desde esta carpeta, arranca la API en esa red. La migracion se ejecuta
+automaticamente al iniciar el contenedor:
 
 ```bash
 docker run --rm --network proyectoceid-network --env-file .env \
