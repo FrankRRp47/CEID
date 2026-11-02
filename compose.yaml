@@ -7,8 +7,10 @@ services:
     build:
       context: ./PostgresContainer
       dockerfile: Dockerfile
-    env_file:
-      - ./PostgresContainer/.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-miusuario}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-12345678}
+      POSTGRES_DB: ${POSTGRES_DB:-mibasededatos}
     restart: unless-stopped
     ports:
       - "5432:5432"
@@ -33,10 +35,10 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
-    env_file:
-      - ./Backend/.env
     environment:
-      DATABASE_URL: postgresql+psycopg://miusuario:12345678@postgres-container:5432/mibasededatos
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://miusuario:12345678@postgres-container:5432/mibasededatos}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-replace-this-with-a-random-secret-of-at-least-32-characters}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -53,7 +55,7 @@ services:
       context: ./Fronted
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: http://proyectoceid-backend:8000
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
     restart: unless-stopped
     ports:
       - "8080:80"
