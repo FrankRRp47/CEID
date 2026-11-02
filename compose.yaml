@@ -49,8 +49,6 @@ services:
   frontend:
     image: proyectoceid-frontend
     container_name: proyectoceid-frontend
-    env_file:
-      - ./Fronted/.env
     build:
       context: ./Fronted
       dockerfile: Dockerfile
