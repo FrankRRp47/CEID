@@ -23,6 +23,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [notice, setNotice] = useState<Notice | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [signedInEmail, setSignedInEmail] = useState(() => localStorage.getItem('ceid_user_email'))
@@ -31,6 +32,7 @@ function App() {
     setMode(nextMode)
     setNotice(null)
     setPassword('')
+    setShowPassword(false)
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -157,16 +159,41 @@ function App() {
               </label>
               <label className="field">
                 <span>Contraseña</span>
-                <input
-                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                  maxLength={128}
-                  minLength={mode === 'register' ? 8 : 1}
-                  placeholder={mode === 'register' ? 'Mínimo 8 caracteres' : 'Tu contraseña'}
-                  required
-                  type="password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
+                <span className="password-input">
+                  <input
+                    autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                    maxLength={128}
+                    minLength={mode === 'register' ? 8 : 1}
+                    placeholder={mode === 'register' ? 'Mínimo 8 caracteres' : 'Tu contraseña'}
+                    required
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                  <button
+                    className="password-toggle"
+                    type="button"
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    aria-pressed={showPassword}
+                    onClick={() => setShowPassword((isVisible) => !isVisible)}
+                  >
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                      {showPassword ? (
+                        <>
+                          <path d="M3 3l18 18" />
+                          <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                          <path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c5.5 0 9 5 9 7s-3.5 7-9 7a9.8 9.8 0 0 1-4.1-.9" />
+                          <path d="M6.6 6.6C4.3 8.1 3 10.7 3 12c0 1 1.5 3.4 4.1 5" />
+                        </>
+                      ) : (
+                        <>
+                          <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                          <circle cx="12" cy="12" r="2.5" />
+                        </>
+                      )}
+                    </svg>
+                  </button>
+                </span>
               </label>
               <button className="submit-button" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Un momento…' : mode === 'login' ? 'Entrar a mi cuenta' : 'Crear mi cuenta'}
