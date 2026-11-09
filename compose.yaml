@@ -1,4 +1,4 @@
-name: proyectoceid
+name: kiraisoft
 
 services:
   postgres:
@@ -8,16 +8,14 @@ services:
       context: ./PostgresContainer
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-miusuario}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-12345678}
-      POSTGRES_DB: ${POSTGRES_DB:-mibasededatos}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER es obligatorio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB es obligatorio}
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql
     networks:
-      proyectoceid-network:
+      kiraisoft-network:
         aliases:
           - postgres-container
     healthcheck:
@@ -30,32 +28,33 @@ services:
       start_period: 10s
 
   backend:
-    image: proyectoceid-backend:latest
-    container_name: proyectoceid-backend
+    image: kiraisoft-backend:latest
+    container_name: kiraisoft-backend
     build:
       context: ./Backend
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://miusuario:12345678@postgres-container:5432/mibasededatos}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-replace-this-with-a-random-secret-of-at-least-32-characters}
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL es obligatorio}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?JWT_SECRET_KEY es obligatorio}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:?GOOGLE_CLIENT_ID es obligatorio}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
     restart: unless-stopped
-    ports:
-      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      - proyectoceid-network
+      - kiraisoft-network
 
   frontend:
-    image: proyectoceid-frontend
-    container_name: proyectoceid-frontend
+    image: kiraisoft-frontend
+    container_name: kiraisoft-frontend
     build:
       context: ./Fronted
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL:-}
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:?GOOGLE_CLIENT_ID es obligatorio}
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -63,16 +62,21 @@ services:
       backend:
         condition: service_healthy
     networks:
-      - proyectoceid-network
+      - kiraisoft-network
       - dokploy-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 volumes:
   postgres-data:
     name: postgres_data
 
 networks:
-  proyectoceid-network:
-    name: proyectoceid-network
+  kiraisoft-network:
+    name: kiraisoft-network
     driver: bridge
 
   dokploy-network:

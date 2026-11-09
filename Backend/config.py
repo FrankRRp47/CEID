@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     jwt_secret_key: SecretStr = Field(min_length=32)
     access_token_expire_minutes: int = Field(default=30, gt=0)
     google_client_id: str | None = None
+    cors_origins: str = "http://localhost:5173,http://localhost:8080"
 
     model_config = SettingsConfigDict(
         env_file=".env",

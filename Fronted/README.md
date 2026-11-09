@@ -1,6 +1,6 @@
-# Frontend CEID
+# kiraiSoft frontend
 
-Interfaz de registro e inicio de sesión para la API de Proyectoceid.
+Landing responsive de kiraiSoft con acceso por email y Google Sign-In.
 
 ## Desarrollo local
 
@@ -15,8 +15,8 @@ El backend debe estar disponible en el puerto 8000. El registro usa `POST /api/v
 Construye y ejecuta la imagen desde esta carpeta:
 
 ```bash
-docker build -t proyectoceid-frontend .
-docker run --rm -p 8080:80 proyectoceid-frontend
+docker build -t kiraisoft-frontend .
+docker run --rm -p 8080:80 kiraisoft-frontend
 ```
 
 Abre `http://localhost:8080`. Para cambiar la dirección de la API incluida en la compilación, agrega `--build-arg VITE_API_URL=http://localhost:8000` al comando `docker build`. La API debe permitir CORS desde el origen del frontend.

@@ -1,15 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
-  --paper: #f7f7f1;
-  --white: #fff;
-  --forest: #1c493d;
-  --muted-green: #c5d5b9;
-  --lime: #d7e9a1;
-  --terracotta: #b65b40;
-  --ink: #202821;
-  --muted: #747b72;
-  --line: #dedfd7;
   --body: 'DM Sans', 'Segoe UI', sans-serif;
   --display: 'Manrope', 'Segoe UI', sans-serif;
   font-family: var(--body);
