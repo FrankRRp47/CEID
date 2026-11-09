@@ -33,7 +33,7 @@ USER app
 
 EXPOSE 8000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=10s --timeout=5s --start-period=120s --retries=6 \
     CMD python -c "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/health', timeout=3)" || exit 1
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

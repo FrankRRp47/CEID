@@ -1,8 +1,10 @@
 # Despliegue de kiraiSoft
 
-## Variables obligatorias
+## Variables recomendadas
 
-Configura estas variables en el proveedor cloud (no las subas al repositorio):
+Configura estas variables en el proveedor cloud (no las subas al repositorio).
+El Compose incluye valores de prueba para poder arrancar si Dokploy todavía no
+inyecta variables; reemplázalos antes de producción.
 
 ```env
 POSTGRES_USER=kiraisoft
@@ -11,9 +13,14 @@ POSTGRES_DB=kiraisoft
 DATABASE_URL=postgresql+psycopg://kiraisoft:<password-url-encoded>@postgres-container:5432/kiraisoft
 JWT_SECRET_KEY=<secreto-aleatorio-de-32-o-mas-caracteres>
 GOOGLE_CLIENT_ID=<client-id-de-google>
+VITE_GOOGLE_CLIENT_ID=<mismo-client-id-de-google>
 CORS_ORIGINS=https://tu-dominio.com,https://www.tu-dominio.com
 VITE_API_URL=
 ```
+
+`GOOGLE_CLIENT_ID` y `VITE_GOOGLE_CLIENT_ID` deben contener exactamente el
+mismo Client ID de Google. Si quedan vacías, el acceso email/contraseña sigue
+funcionando y Google se desactiva.
 
 `VITE_API_URL` debe quedar vacío cuando el frontend y la API se publican bajo
 el mismo dominio: Nginx enviará `/api` al backend. Si la API tiene un dominio

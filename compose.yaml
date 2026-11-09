@@ -8,9 +8,9 @@ services:
       context: ./PostgresContainer
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER es obligatorio}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es obligatorio}
-      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB es obligatorio}
+      POSTGRES_USER: ${POSTGRES_USER:-kiraisoft}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-4Ijwft2VpRTYgEe5iMNau98k}
+      POSTGRES_DB: ${POSTGRES_DB:-kiraisoft}
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql
@@ -34,15 +34,21 @@ services:
       context: ./Backend
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL es obligatorio}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?JWT_SECRET_KEY es obligatorio}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kiraisoft:4Ijwft2VpRTYgEe5iMNau98k@postgres-container:5432/kiraisoft}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-y4dL6IZYpHUeStr5DioWKlCEkg7bTx2ja31NR9XzMwGuc0sA}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:?GOOGLE_CLIENT_ID es obligatorio}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID-}"
+      CORS_ORIGINS: "${CORS_ORIGINS:-*}"
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 6
     networks:
       - kiraisoft-network
 
@@ -54,7 +60,7 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL:-}
-        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:?GOOGLE_CLIENT_ID es obligatorio}
+        VITE_GOOGLE_CLIENT_ID: "${VITE_GOOGLE_CLIENT_ID-}"
     restart: unless-stopped
     ports:
       - "8080:80"
