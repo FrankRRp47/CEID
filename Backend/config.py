@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://miusuario:12345678@localhost:5432/mibasededatos"
     jwt_secret_key: SecretStr = Field(min_length=32)
     access_token_expire_minutes: int = Field(default=30, gt=0)
+    google_client_id: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

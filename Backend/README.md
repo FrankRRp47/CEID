@@ -1,6 +1,6 @@
-# Backend
+# kiraiSoft API
 
-API FastAPI con PostgreSQL, migraciones Alembic y autenticacion mediante JWT.
+API FastAPI con PostgreSQL, migraciones Alembic, JWT y autenticación con Google.
 El backend requiere Python 3.15.2; el Dockerfile de esta carpeta es independiente
 del frontend y del contenedor de PostgreSQL.
 
@@ -35,6 +35,8 @@ para que la URL local de `.env` pueda alcanzarlo.
   `password` (minimo 8 caracteres).
 - `POST /api/v1/auth/login`: autentica con `email` y `password`; devuelve un
   token de acceso Bearer.
+- `POST /api/v1/auth/google`: valida la credencial de Google y devuelve un
+  token de acceso Bearer. Requiere `GOOGLE_CLIENT_ID`.
 - `GET /health`: comprobacion de salud.
 
 Para generar una clave JWT de desarrollo, usa
@@ -55,22 +57,22 @@ Si PostgreSQL ya esta ejecutandose en un contenedor llamado
 Ejecuta estos comandos una sola vez:
 
 ```bash
-docker network create proyectoceid-network
-docker network connect proyectoceid-network postgres-container
+docker network create kiraisoft-network
+docker network connect kiraisoft-network postgres-container
 ```
 
 Desde esta carpeta, arranca la API en esa red. La migracion se ejecuta
 automaticamente al iniciar el contenedor:
 
 ```bash
-docker run --rm --network proyectoceid-network --env-file .env \
+docker run --rm --network kiraisoft-network --env-file .env \
   -e DATABASE_URL="postgresql+psycopg://miusuario:12345678@postgres-container:5432/mibasededatos" \
-  proyectoceid-backend:latest alembic upgrade head
+  kiraisoft-backend:latest alembic upgrade head
 
-docker run --name proyectoceid-backend --network proyectoceid-network \
+docker run --name kiraisoft-backend --network kiraisoft-network \
   -p 8000:8000 --env-file .env \
   -e DATABASE_URL="postgresql+psycopg://miusuario:12345678@postgres-container:5432/mibasededatos" \
-  proyectoceid-backend:latest
+  kiraisoft-backend:latest
 ```
 
 Si la red ya existe, omite `docker network create`. Si PostgreSQL ya esta

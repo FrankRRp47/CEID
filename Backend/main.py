@@ -4,9 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers.auth import router as auth_router
 
 app = FastAPI(
-    title="Proyectoceid API",
+    title="kiraiSoft API",
     version="1.0.0",
-    description="API de autenticacion para Proyectoceid.",
+    description="API de autenticación para kiraiSoft.",
 )
 
 app.add_middleware(
